@@ -6,10 +6,13 @@ using Taboo::Test;
 
 
 int main() {
-	Test t;
+    Test t;
 
     t["boolean check"] = V(true) == true;
     t["boolean must fail"] = V(true) == false;
+
+	t["boolean check is succeed"] = V((bool)t["boolean check"]);
+	t["boolean check is failed"] = V((bool)t["boolean must fail"]) == false;
 
     t["equals / not equals"] = 9 != (10 != (5 == V(10))) == 10 == 20 != 10 != 11;
     t["lt"] = 5 < V(10) < 20 < 10;

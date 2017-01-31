@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <map>
 
 #include "case.h"
 
@@ -13,6 +14,7 @@ class Test {
 private:
     int success;
     int count;
+    std::map<std::string, Case*> cases;
 
 public:
     Test() {
@@ -20,8 +22,11 @@ public:
         count = 0;
     }
 
-    Case operator [](std::string name) {
-        return { name };
+    CaseHandler operator [](std::string name) {
+        if(cases.find(name) == cases.end()){
+            cases[name] = new Case{ valid: true, label: "" };
+        }
+        return { name, *cases[name] };
     }
 };
 

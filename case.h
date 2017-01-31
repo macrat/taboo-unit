@@ -10,39 +10,49 @@
 
 namespace Taboo {
 
-class Case {
-private:
-    std::string name;
+struct Case {
     bool valid;
     std::string label;
+};
+
+class CaseHandler {
+private:
+	std::string name;
+	Case& c;
+	bool set;
 
     std::string paddedName() {
         return name + std::string(70 - name.length(), ' ');
     }
 
 public:
-    Case(std::string name) : name(name) {
-        valid = true;
-        std::cout << name << paddedName() << "\e[1;30m[....]\e[0m";
+    CaseHandler(std::string name, Case& c) : name(name), c(c) {
+		if(c.label.length() != 0){
+			std::cout << paddedName() << "\e[1;30m[....]\e[0m";
+		}
+		set = false;
     }
 
-    ~Case() {
-        if(label.length() == 0){
-            std::cout << "\r\e[37m" << paddedName() << "\e[0m[DONE]" << std::endl;
-        }else if(valid){
-            std::cout << "\r\e[37m" << paddedName() << "\e[0m[" << label << "]" << std::endl;
-        }else{
-            std::cout << "\r\e[31m" << paddedName() << "\e[0m[" << label << "]" << std::endl;
+    ~CaseHandler() {
+        if(set){
+			if(c.valid){
+				std::cout << "\r\e[37m" << paddedName() << "\e[0m[" << c.label << "]" << std::endl;
+			}else{
+				std::cout << "\r\e[31m" << paddedName() << "\e[0m[" << c.label << "]" << std::endl;
+			}
         }
     }
 
-    template<class T> Case& operator =(Value<T> v) {
-        valid = (bool)v;
-        label = (std::string)v;
+    template<class T> CaseHandler& operator =(Value<T> v) {
+        c.valid = (bool)v;
+        c.label = (std::string)v;
+		set = true;
         return *this;
     }
 
-    operator bool() const { return valid; }
+	operator std::string() const { return name; }
+    operator bool() const { return c.valid; }
+	std::string label() const { return c.label; }
 };
 
 }
