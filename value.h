@@ -17,7 +17,7 @@ template<class T> inline std::string as_str(T v) {
 
 
 template<> inline std::string as_str<bool>(bool v) {
-    return std::string(v ? "true" : "false");
+    return { v ? "true" : "false" };
 }
 
 
